@@ -1,23 +1,6 @@
 version: '3'
 
 services:
-  appnode:
-    container_name: appnode
-    entrypoint: dockerize -wait tcp://dbnode:3306 -timeout 20s npm start
-    image: andersonascimento/fullcycle-appnode
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    volumes:
-      - ./app:/usr/src/app
-    networks:
-      - net1
-    tty: true
-    # ports:
-    #   - "3333:3333"
-    depends_on:
-      - dbnode
-
   dbnode:
     image: mysql:5.7
     command: --innodb-use-native-aio=0
@@ -31,6 +14,21 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     networks:
       - net1
+
+  appnode:
+    container_name: appnode
+    entrypoint: dockerize -wait tcp://dbnode:3306 -timeout 20s npm start
+    image: andersonascimento/fullcycle-appnode
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/usr/src/app
+    networks:
+      - net1
+    tty: true
+    depends_on:
+      - dbnode
 
   nginx:
     build:
