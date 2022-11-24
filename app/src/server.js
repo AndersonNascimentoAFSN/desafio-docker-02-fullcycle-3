@@ -6,19 +6,21 @@ const port = 3333
 
 app.get('/', async (_, res) => {
   const selectSql = `SELECT * FROM people`;
-  const people = await Repository.query(selectSql);
+  const people = await Repository.querySql(selectSql);
 
-  const title = 'Full Cycle Rocks!'
+  const title = '<h1>Full Cycle Rocks!</h1>'
   const listNames = `
   <ul>
     ${people.map((person) => `<li>${person.name}</li>`).join('')}
   </ul>
 `
 
-  res.send(`<h1>${listNames}</h1>`)
+  res.send(`${title} ${listNames}`)
 })
 
 app.listen(port, () => {
+  console.log(`Executando na porta ${port}`)
+  
   const createSql = `
   CREATE TABLE IF NOT EXISTS people (id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(80), PRIMARY KEY (id));
@@ -31,7 +33,6 @@ app.listen(port, () => {
     ('Thyago Teixeira'),
     ('Yanni Teixeira')
   `
-  Repository.query(sqlInsert);
+  Repository.querySql(sqlInsert);
 
-  console.log(`Executando na porta ${port}`)
 })

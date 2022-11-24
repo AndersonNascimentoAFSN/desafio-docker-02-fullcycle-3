@@ -11,8 +11,9 @@ async function querySql(sql) {
   const connection = mysql.createConnection(config)
 
   const queryPromise = new Promise((resolve, reject) => {
-    connection.query(sqlSelect, function (err, result) {
-      if (err)  reject(err);
+    connection.query(sql, function (err, result) {
+      if (err)  reject(err)
+
       resolve(result)
     })
   })
