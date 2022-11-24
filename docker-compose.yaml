@@ -13,8 +13,8 @@ services:
     networks:
       - net1
     tty: true
-    ports:
-      - "3333:3333"
+    # ports:
+    #   - "3333:3333"
     depends_on:
       - dbnode
 
@@ -42,6 +42,8 @@ services:
       - net1
     ports:
       - "8080:80"
+    depends_on:
+      - appnode
 
 networks:
   net1:

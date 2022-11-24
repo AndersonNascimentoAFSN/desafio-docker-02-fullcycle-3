@@ -1,34 +1,37 @@
 const express = require('express')
-const mysql = require('mysql')
-
 const app = express()
+const { Repository } = require('./repository')
 
 const port = 3333
 
-const config = {
-  host: 'dbnode',
-  user: 'root',
-  password: 'root',
-  database: 'nodedb'
-}
+app.get('/', async (_, res) => {
+  const selectSql = `SELECT * FROM people`;
+  const people = await Repository.query(selectSql);
 
-let name = ''
+  const title = 'Full Cycle Rocks!'
+  const listNames = `
+  <ul>
+    ${people.map((person) => `<li>${person.name}</li>`).join('')}
+  </ul>
+`
 
-const connection = mysql.createConnection(config)
-const sqlInsert = `INSERT INTO people(name) value('Full Cycle Rocks!')`
-const sqlSelect = 'SELECT name FROM people WHERE name = "Full Cycle Rocks!"'
-connection.query(sqlInsert)
-connection.query(sqlSelect, function (err, result) {
-  if (err) throw err;
-  name = result[0].name
-})
-connection.end()
-
-
-app.get('/', (req, res) => {
-  res.send(`<h1>${name}</h1>`)
+  res.send(`<h1>${listNames}</h1>`)
 })
 
 app.listen(port, () => {
+  const createSql = `
+  CREATE TABLE IF NOT EXISTS people (id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(80), PRIMARY KEY (id));
+`
+  Repository.querySql(createSql)
+
+  const sqlInsert = `INSERT INTO people(name) values
+    ('Anderson Nascimento'),
+    ('Bruno Teixeira'),
+    ('Thyago Teixeira'),
+    ('Yanni Teixeira')
+  `
+  Repository.query(sqlInsert);
+
   console.log(`Executando na porta ${port}`)
 })
