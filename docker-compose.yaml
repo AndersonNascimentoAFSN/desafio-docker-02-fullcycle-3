@@ -24,6 +24,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./app:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       - net1
     tty: true
